@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uz">
+<head th:replace="~{fragments/layout :: head('Mijoz')}" ></head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <main class="main-content">
+        <div th:replace="~{fragments/layout :: topbar('Mijoz qo\'shish / tahrirlash')}"></div>
+        <div class="content-body">
+            <div class="section-card form-card">
+                <form th:action="@{/customers/save}" th:object="${customer}" method="post">
+                    <input type="hidden" th:field="*{id}"/>
+ 
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Ism *</label>
+                            <input type="text" th:field="*{name}" class="form-input" placeholder="To'liq ism"/>
+                            <span class="form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" th:field="*{email}" class="form-input" placeholder="email@example.com"/>
+                            <span class="form-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefon</label>
+                            <input type="text" th:field="*{phone}" class="form-input" placeholder="+998 90 000 00 00"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Kompaniya</label>
+                            <input type="text" th:field="*{company}" class="form-input" placeholder="Kompaniya nomi"/>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Manzil</label>
+                            <input type="text" th:field="*{address}" class="form-input" placeholder="Shahar, ko'cha, uy"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select th:field="*{status}" class="form-input">
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                            </select>
+                        </div>
+                    </div>
+ 
+                    <div class="form-actions">
+                        <a th:href="@{/customers}" class="btn btn-secondary">Bekor qilish</a>
+                        <button type="submit" class="btn btn-primary">Saqlash</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

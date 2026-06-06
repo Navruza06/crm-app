@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uz">
+<head th:replace="~{fragments/layout :: head('Buyurtma')}"></head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <main class="main-content">
+        <div th:replace="~{fragments/layout :: topbar('Buyurtma qo\'shish / tahrirlash')}"></div>
+        <div class="content-body">
+            <div class="section-card form-card">
+                <form th:action="@{/orders/save}" th:object="${order}" method="post">
+                    <input type="hidden" th:field="*{id}"/>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Mijoz *</label>
+                            <select th:field="*{customer.id}" class="form-input">
+                                <option value="">— Mijozni tanlang —</option>
+                                <option th:each="c : ${customers}"
+                                        th:value="${c.id}"
+                                        th:text="${c.name}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mahsulot</label>
+                            <select th:field="*{product.id}" class="form-input">
+                                <option value="">— Mahsulotni tanlang —</option>
+                                <option th:each="p : ${products}"
+                                        th:value="${p.id}"
+                                        th:text="${p.name} + ' ($' + ${p.price} + ')'"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Miqdor</label>
+                            <input type="number" th:field="*{quantity}" class="form-input" min="1" value="1"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select th:field="*{status}" class="form-input">
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Izoh</label>
+                            <textarea th:field="*{notes}" class="form-input" rows="3" placeholder="Qo'shimcha ma'lumot..."></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <a th:href="@{/orders}" class="btn btn-secondary">Bekor qilish</a>
+                        <button type="submit" class="btn btn-primary">Saqlash</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

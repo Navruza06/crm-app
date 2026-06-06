@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uz">
+<head th:replace="~{fragments/layout :: head('Mahsulotlar')}"></head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <main class="main-content">
+        <div th:replace="~{fragments/layout :: topbar('Mahsulotlar')}"></div>
+        <div class="content-body">
+ 
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+ 
+            <div class="toolbar">
+                <form th:action="@{/products}" method="get" class="search-form">
+                    <input type="text" name="search" placeholder="Mahsulot qidirish..."
+                           th:value="${search}" class="search-input"/>
+                    <button type="submit" class="btn btn-secondary">Qidirish</button>
+                </form>
+                <a th:href="@{/products/new}" class="btn btn-primary">+ Yangi mahsulot</a>
+            </div>
+ 
+            <div class="section-card">
+                <div th:if="${#lists.isEmpty(products)}" class="empty-state">
+                    <div class="empty-icon">◧</div>
+                    <p>Mahsulotlar topilmadi</p>
+                </div>
+                <table th:if="${!#lists.isEmpty(products)}" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nom</th>
+                            <th>Kategoriya</th>
+                            <th>SKU</th>
+                            <th>Narx</th>
+                            <th>Omborda</th>
+                            <th>Status</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p, stat : ${products}">
+                            <td class="mono" th:text="${stat.index + 1}">1</td>
+                            <td th:text="${p.name}">-</td>
+                            <td th:text="${p.category}">-</td>
+                            <td class="mono" th:text="${p.sku}">-</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(p.price, 0, 'COMMA', 2, 'POINT')}">-</td>
+                            <td th:text="${p.stockQuantity}">0</td>
+                            <td>
+                                <span class="badge" th:classappend="${p.status.name()}" th:text="${p.status}">-</span>
+                            </td>
+                            <td class="actions-cell">
+                                <a th:href="@{/products/{id}/edit(id=${p.id})}" class="btn-icon">✎</a>
+                                <a th:href="@{/products/{id}/delete(id=${p.id})}"
+                                   class="btn-icon danger"
+                                   onclick="return confirm('O\'chirmoqchimisiz?')">✕</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

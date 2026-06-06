@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uz">
+<head th:replace="~{fragments/layout :: head('Buyurtmalar')}"></head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <main class="main-content">
+        <div th:replace="~{fragments/layout :: topbar('Buyurtmalar')}"></div>
+        <div class="content-body">
+ 
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+ 
+            <div class="toolbar">
+                <div></div>
+                <a th:href="@{/orders/new}" class="btn btn-primary">+ Yangi buyurtma</a>
+            </div>
+ 
+            <div class="section-card">
+                <div th:if="${#lists.isEmpty(orders)}" class="empty-state">
+                    <div class="empty-icon">◈</div>
+                    <p>Buyurtmalar topilmadi</p>
+                </div>
+                <table th:if="${!#lists.isEmpty(orders)}" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Buyurtma #</th>
+                            <th>Mijoz</th>
+                            <th>Mahsulot</th>
+                            <th>Miqdor</th>
+                            <th>Summa</th>
+                            <th>Status</th>
+                            <th>Sana</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="o : ${orders}">
+                            <td class="mono" th:text="${o.orderNumber}">-</td>
+                            <td th:text="${o.customer?.name}">-</td>
+                            <td th:text="${o.product?.name ?: '—'}">-</td>
+                            <td th:text="${o.quantity}">1</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(o.totalAmount ?: 0, 0, 'COMMA', 2, 'POINT')}">-</td>
+                            <td>
+                                <span class="badge" th:classappend="${o.status.name()}" th:text="${o.status}">-</span>
+                            </td>
+                            <td class="mono" th:text="${#temporals.format(o.createdAt, 'dd.MM.yyyy')}">-</td>
+                            <td class="actions-cell">
+                                <a th:href="@{/orders/{id}/edit(id=${o.id})}" class="btn-icon">✎</a>
+                                <a th:href="@{/orders/{id}/delete(id=${o.id})}"
+                                   class="btn-icon danger"
+                                   onclick="return confirm('O\'chirmoqchimisiz?')">✕</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

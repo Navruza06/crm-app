@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uz">
+<head th:replace="~{fragments/layout :: head('Mijozlar')}"></head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+    <main class="main-content">
+        <div th:replace="~{fragments/layout :: topbar('Mijozlar')}"></div>
+        <div class="content-body">
+ 
+            <!-- Alert -->
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+ 
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <form th:action="@{/customers}" method="get" class="search-form">
+                    <input type="text" name="search" placeholder="Mijoz qidirish..."
+                           th:value="${search}" class="search-input"/>
+                    <button type="submit" class="btn btn-secondary">Qidirish</button>
+                </form>
+                <a th:href="@{/customers/new}" class="btn btn-primary">+ Yangi mijoz</a>
+            </div>
+ 
+            <!-- Table -->
+            <div class="section-card">
+                <div th:if="${#lists.isEmpty(customers)}" class="empty-state">
+                    <div class="empty-icon">◉</div>
+                    <p>Mijozlar topilmadi</p>
+                </div>
+                <table th:if="${!#lists.isEmpty(customers)}" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Ism</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th>Kompaniya</th>
+                            <th>Status</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="c, stat : ${customers}">
+                            <td class="mono" th:text="${stat.index + 1}">1</td>
+                            <td th:text="${c.name}">-</td>
+                            <td th:text="${c.email}">-</td>
+                            <td th:text="${c.phone}">-</td>
+                            <td th:text="${c.company}">-</td>
+                            <td>
+                                <span class="badge" th:classappend="${c.status.name()}" th:text="${c.status}">-</span>
+                            </td>
+                            <td class="actions-cell">
+                                <a th:href="@{/customers/{id}/edit(id=${c.id})}" class="btn-icon">✎</a>
+                                <a th:href="@{/customers/{id}/delete(id=${c.id})}"
+                                   class="btn-icon danger"
+                                   onclick="return confirm('Haqiqatan o\'chirmoqchimisiz?')">✕</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
